@@ -1,0 +1,58 @@
+version: 2
+
+sources:
+  - name: public
+    database: dbt_db
+    schema: public
+    tables:
+      - name: aklamio_challenge
+
+models:
+  - name: event
+    description: >
+      Transformed event-level data from the aklamio_challenge json source.
+      Extracts event attributes from the JSON payload, parses timestamps,
+      and enforces a clean event grain at (event_id, event_type).
+    columns:
+      - name: event_id
+        description: Unique identifier for an event. Multiple event_types per event_id are expected.
+        tests:
+          - not_null
+      - name: event_type
+        description: Type of event fired. Nullable due to known tracking gaps.
+        tests:
+          - accepted_values:
+              values:
+                - ReferralPageLoad
+                - FaqClick
+                - ReferralRecommendClick
+                - EMPTY_VALUE
+              quote: true
+              config:
+                severity: warn
+      - name: user_id
+        description: Identifier of the user associated with the event.
+        tests:
+          - not_null
+      - name: customer_id
+        description: Identifier of the customer associated with the event.
+        tests:
+          - not_null
+      - name: email
+        description: Email address associated with the event.
+        tests:
+          - not_null
+      - name: ip
+        description: IP address from which the event was fired.
+        tests:
+          - not_null
+      - name: fired_at
+        description: >
+          Timestamp when the event was fired, parsed from the payload and
+          converted to CET timezone.
+        tests:
+          - not_null
+    tests:
+      - unique:
+          column_name: "event_id || '-' || event_type"
+

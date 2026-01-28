@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: dim_user
+    description: >
+      User dimension table derived from event data. Contains one row per unique user and customer combination
+      with stable identifying attributes.
+    columns:
+      - name: user_id
+        description: Unique identifier for the user.
+        tests:
+          - not_null
+      - name: email
+        description: Email address associated with the user.
+        tests:
+          - not_null
+      - name: ip
+        description: Most recent or associated IP address for the user.
+        tests:
+          - not_null
+    tests:
+      - unique:
+          column_name: "user_id || '-' || email"
+
+
+  - name: fact_event
+    description: >
+      Event fact table at the event-level grain. Each row represents a single event occurrence
+      identified by event_id and event_type.
+
+    columns:
+      - name: event_id
+        description: Unique identifier for the event.
+        tests:
+          - not_null
+      - name: event_type
+        description: Type of event fired.
+      - name: fired_at
+        description: Timestamp when the event occurred (CET).
+        tests:
+          - not_null
+      - name: customer_id
+        description: Identifier of the customer associated with the event.
+        tests:
+          - not_null
+
+    tests:
+      - unique:
+          column_name: "event_id || '-' || event_type"
