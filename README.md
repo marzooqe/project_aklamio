@@ -1,5 +1,5 @@
 # Quick Start
-All data models and tests
+All data models and tests are stored in respective schema folders
 - [DBT Models](models)
 
 - Execution  

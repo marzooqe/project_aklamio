@@ -40,3 +40,61 @@ select
 	min(fired_at),
 	max(fired_at)
 from "transform"."event";
+
+--same event duplicit customer check
+select
+  event_id,
+  count(distinct customer_id) as customer_count
+from "transform"."event" e
+group by event_id
+having count(distinct customer_id) > 1;
+
+--same event duplicit user check
+select
+  event_id,
+  count(distinct user_id) as user_count
+from "transform"."event" e
+group by event_id
+having count(distinct user_id) > 1;
+
+--existing event_type_count case verification
+select
+  event_id,
+  count(distinct event_type) as event_type_count
+from "transform"."event" e
+group by event_id
+having count(distinct event_type) > 1;
+
+--same email duplicate user_ids check
+select
+  email,
+  count(distinct user_id) as same_email_user_ids
+from "transform"."event" e
+group by email
+having count(distinct user_id) > 1;
+
+--time gap between events check
+select
+  event_id,
+  max(fired_at) - min(fired_at) as time_gap
+from "transform"."event" e
+group by event_id
+having max(fired_at) - min(fired_at) > interval '1 hour';
+
+--event per user skew check 
+select
+  user_id,
+  count(*) as event_count
+from "transform"."event" e
+group by user_id
+order by event_count desc
+limit 10;
+
+--sequence of events check
+select event_id
+from "transform"."event" e
+group by event_id
+having
+  min(case when event_type = 'ReferralPageLoad' then fired_at end)
+  >
+  min(case when event_type = 'ReferralRecommendClick' then fired_at end);
