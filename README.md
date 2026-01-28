@@ -4,8 +4,10 @@ All data models and tests
 
 - Execution  
 <br />-> Download & install Docker Desktop (if not already installed) using the official website.
--> Clone this repo https://github.com/marzooqe/d to your device.
--> Note: The repository includes docker container with postgres and dbt setup along with raw data the container.
+<br />-> Clone this repo https://github.com/marzooqe/project_aklamio to your device.
+<pre><code>git clone https://github.com/marzooqe/project_aklamio
+</code></pre>
+-> Note: The repository includes docker container with postgres and dbt setup along with raw json data.
 -> Execute the complete setup by the command
 <pre><code>docker compose run up -d
 docker compose run --rm dbt build
