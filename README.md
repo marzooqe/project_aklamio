@@ -23,7 +23,7 @@ docker compose run --rm dbt test
 </code></pre>
 
 # Project Aklamio
- This project implements ETL workflow using dbt & python, architecting raw json events data into data model and actionable business insights.
+ This project implements ETL workflow using dbt, architecting raw json events data into data model and actionable business insights.
 
 ### 🧭 Overview
 This project simulates a modern data stack that is organised,clean, scalable which addresses data queries from analytics. It includes:
